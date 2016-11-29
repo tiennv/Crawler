@@ -14,13 +14,13 @@ namespace Crawler
         {
             try
             {
-
-                var objLinks = _repoLinks.GetAll(200);
-                foreach (var item in objLinks)
-                {
-                    GetDetail(item);
-                }
-                Console.WriteLine("OK");
+                GetLinkDetailiOs();
+                //var objLinks = _repoLinks.GetAll(200);
+                //foreach (var item in objLinks)
+                //{
+                //    GetDetail(item);
+                //}
+                //Console.WriteLine("OK");
             }
             catch(Exception ex)
             {
@@ -58,6 +58,7 @@ namespace Crawler
 
         static readonly RepositoryLinks _repoLinks = new RepositoryLinks();
         static readonly RepositoryContents _repoContents = new RepositoryContents();
+
         static void GetLinkDetail()
         {
             int pageIndex = 20;
@@ -108,6 +109,40 @@ namespace Crawler
             Console.Read();
         }
 
+        static void GetLinkDetailiOs()
+        {
+            var url = "https://itunes.apple.com/vn/developer/sunnet-information-technology/id484411306";
+            var data = Utility.CrawlHTML(url, "itunes.apple.com");
+            var items = new List<string>();
+            var div = Utility.ExtractAllValueUsingXPath(data, @"//div[@class='swoosh lockup-container large album']/div[@class='content']/div");
+            foreach(var item in div)
+            {
+                var divList = Utility.ExtractAllValueUsingXPath(item, @"//div[@class='lockup small application']");
+                foreach (var divItem in divList)
+                {
+                    var a = Utility.ExtractValueUsingXPath(divItem, @"//div/a");
+                    var link = Utility.GetValueFromNodeByAttribute(a, @"href");
+                    var img = Utility.ExtractValueUsingXPath(a, @"//img");
+                    var src = Utility.GetValueFromNodeByAttribute(img, @"src-swap-high-dpi");
+                    var title = Utility.GetValueFromNodeByAttribute(img, @"alt");
+                    var objLink = new Links
+                    {
+                        Avatar = src,
+                        DateCrawler = DateTime.Now,
+                        GameType = 1,
+                        Link = link,
+                        Title = title,
+                        LinkType = 2                        
+                    };
+
+                    int inserted = _repoLinks.Add(objLink);
+                    Console.WriteLine(inserted);
+                }
+            }
+            
+            Console.Read();
+        }
+
         static void GetDetail(Links objLink)
         {
 
@@ -155,5 +190,6 @@ namespace Crawler
             }
             
         }
+
     }
 }

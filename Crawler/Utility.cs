@@ -34,7 +34,7 @@ namespace CrawlBonBanh
         {
             try
             {
-                var cookieCollection = GetCookieCollection(urlAddress);
+                var cookieCollection = GetCookieCollection(urlAddress, "itunes.apple.com");
                 Sleep();
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(urlAddress);
                 if (cookieCollection != null && cookieCollection.Count > 0)
@@ -43,6 +43,54 @@ namespace CrawlBonBanh
                     request.CookieContainer.Add(cookieCollection);
                 }
                 request.Host = "s.qplay.vn";
+                request.UserAgent = ugent;
+                request.Timeout = 30000;
+
+                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+
+                if (response.StatusCode == HttpStatusCode.OK)
+                {
+                    Stream receiveStream = response.GetResponseStream();
+                    StreamReader readStream = null;
+
+                    if (response.CharacterSet == null)
+                    {
+                        readStream = new StreamReader(receiveStream);
+                    }
+                    else
+                    {
+                        readStream = new StreamReader(receiveStream, Encoding.GetEncoding(response.CharacterSet));
+                    }
+
+                    string data = readStream.ReadToEnd();
+
+                    response.Close();
+                    readStream.Close();
+                    return data;
+                }
+                response.Close();
+                return string.Empty;
+            }
+            catch (Exception ex)
+            {
+                return string.Empty;
+            }
+
+        }
+
+        public static string CrawlHTML(string urlAddress, string host)
+        {
+            try
+            {
+                var cookieCollection = GetCookieCollection(urlAddress, host);
+                Sleep();
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(urlAddress);
+                if (cookieCollection != null && cookieCollection.Count > 0)
+                {
+                    request.CookieContainer = new CookieContainer();
+                    request.CookieContainer.Add(cookieCollection);
+                }
+                request.Host = host;
                 request.UserAgent = ugent;
                 request.Timeout = 30000;
 
@@ -132,6 +180,34 @@ namespace CrawlBonBanh
             }
 
         }
+
+        private static CookieCollection GetCookieCollection(string linkAddress, string host)
+        {
+            if (string.IsNullOrEmpty(linkAddress))
+            {
+                return null;
+            }
+
+            Sleep();
+            try
+            {
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(linkAddress);
+                request.KeepAlive = false;
+                request.Timeout = 15000;
+                request.Host = host;
+                request.UserAgent = ugent;
+                request.CookieContainer = new CookieContainer();
+                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                response.Close();
+                return response.Cookies;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+
+        }
+
         private static CookieCollection GetCookieCollection(string linkAddress, WebProxy proxy)
         {
             if (string.IsNullOrEmpty(linkAddress))
