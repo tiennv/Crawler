@@ -16,6 +16,8 @@ namespace Crawler
         int Add(T t);
         bool Update(T t);
         bool Delete(int id);
+
+        List<T> GetAll(int top);
     }
 
     public class BaseRepository<T> : IBaseRepository<T> where T : ModalsBase, new()
@@ -94,11 +96,22 @@ namespace Crawler
             using (var sqlConnection = new SqlConnection(ConnectionString))
             {
                 sqlConnection.Open();
-
-                //var result = sqlConnection.Get<T>(id);
-
                 var result = sqlConnection.Query<T>($"select * from {typeof(T).Name} where id = {id}").FirstOrDefault();
+                sqlConnection.Close();
+                sqlConnection.Dispose();
 
+                return result;
+            }
+        }
+
+        public List<T> GetAll(int top)
+        {
+            using (var sqlConnection = new SqlConnection(ConnectionString))
+            {
+                sqlConnection.Open();
+                var result = sqlConnection.Query<T>($"select Top({top}) * from {typeof(T).Name} where DateSynced is null").ToList();
+                sqlConnection.Close();
+                sqlConnection.Dispose();
                 return result;
             }
         }

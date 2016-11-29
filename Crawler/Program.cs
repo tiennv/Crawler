@@ -12,8 +12,21 @@ namespace Crawler
         static string domain = "http://s.qplay.vn";
         static void Main(string[] args)
         {
-            var objLink = _repoLinks.GetById(193);
-            GetDetail(objLink);
+            try
+            {
+
+                var objLinks = _repoLinks.GetAll(200);
+                foreach (var item in objLinks)
+                {
+                    GetDetail(item);
+                }
+                Console.WriteLine("OK");
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            Console.Read();
             //GetLinkDetail();
             //var data = Utility.CrawlHTML(domain);
             //var items = new List<string>();
@@ -75,7 +88,8 @@ namespace Crawler
                         LinkType = 2,
                         LinkDownload = domain + linkDownload,
                         Title = title,
-                        DateCrawler = DateTime.Now
+                        DateCrawler = DateTime.Now,
+                        GameType = 0
                     };
 
                     _repoLinks.Add(objLink);
@@ -134,8 +148,12 @@ namespace Crawler
             };
 
             var inserted = _repoContents.Add(objDetail);
-            Console.WriteLine(inserted);
-            Console.Read();
+            if (inserted > 0)
+            {
+                objLink.DateSynced = DateTime.Now;
+                _repoLinks.Update(objLink);
+            }
+            
         }
     }
 }
