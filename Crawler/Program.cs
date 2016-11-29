@@ -14,7 +14,8 @@ namespace Crawler
         {
             try
             {
-                GetLinkDetailiOs();
+                GetDetailiOS();
+                //GetLinkDetailiOs();
                 //var objLinks = _repoLinks.GetAll(200);
                 //foreach (var item in objLinks)
                 //{
@@ -140,6 +141,17 @@ namespace Crawler
                 }
             }
             
+            Console.Read();
+        }
+
+        static void GetDetailiOS()
+        {
+            var url = "https://itunes.apple.com/vn/app/ao-vang-mua-thu/id548894214?mt=8";
+            var data = Utility.CrawlHTML(url, "itunes.apple.com");
+            var divContent = Utility.ExtractValueUsingXPath(data, @"//div[@class='product-review']");
+            var content = Utility.GetValueFromSpan(Utility.ExtractValueUsingXPath(divContent, "//div/p"),"p");
+
+            Console.WriteLine(divContent);
             Console.Read();
         }
 
