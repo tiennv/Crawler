@@ -22,18 +22,19 @@ namespace Crawler
                 var href = Utility.GetValueFromNodeByAttribute(itemA, @"href");
                 var img = Utility.ExtractValueUsingXPath(itemA, @"//img");
                 var src = Utility.GetValueFromNodeByAttribute(img, @"src");
-                var devDetail = Utility.ExtractValueUsingXPath(item, @"//div[@id='info']/span[@class='mid_info']");
-                var detail = Utility.GetValueFromSpan(devDetail, @"//span[@class='mid_info']");
-
+                var devDes = Utility.ExtractValueUsingXPath(item, @"//div[@id='info']/span[@class='mid_info']");
+                var des = Utility.GetValueFromSpan(devDes, @"//span[@class='mid_info']");
+                var itemDownload = Utility.ExtractValueUsingXPath(item, @"//a[@class='download_1']");
+                var linkDownload = Utility.GetValueFromNodeByAttribute(itemDownload, @"href");
                 var objLink = new Links
                 {
                     Avatar = src,
                     Link = href,
-                    Description = detail,
+                    Description = des,
                     LinkType = 2,
-
+                    LinkDownload = linkDownload
                 };
-                Console.WriteLine(detail);
+                Console.WriteLine(linkDownload);
             }
             //foreach(var item in resp)
             //{
