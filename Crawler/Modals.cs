@@ -24,10 +24,11 @@ namespace Crawler
         public string Title { get; set; }
         public string Description { get; set; }
         public DateTime DateCrawler { get; set; }
-        public DateTime DateSynced { get; set; }
+        public DateTime? DateSynced { get; set; }
         public int CountSynced { get; set; }
         public int LinkType { get; set; }
         public string LinkDownload { get; set; }
+        public int GameType { get; set; }
     }
 
     public class Contents : ModalsBase
@@ -41,8 +42,10 @@ namespace Crawler
         public string LinkDownload { get; set; }
         public string AvatarBig { get; set; }
         public string ImageContent { get; set; }
-        public DateTime DateSynced { get; set; }
-        public DateTime DateModify { get; set; }
+        public DateTime? DateSynced { get; set; }
+        public DateTime? DateModify { get; set; }
+        public string Link { get; set; }
+        public int LinkId { get; set; }
     }
 
 
