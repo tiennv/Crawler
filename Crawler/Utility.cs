@@ -299,6 +299,30 @@ namespace CrawlBonBanh
             }
             return result;
         }
+
+        public static string GetValueFromSpan(string text, string attributeName)
+        {
+            string result;
+            try
+            {
+                HtmlDocument htmlDocument = new HtmlDocument();
+                htmlDocument.LoadHtml(text);
+                var node = htmlDocument.DocumentNode.SelectSingleNode(attributeName);
+                if (node != null)
+                {
+                    result = node.InnerText;
+                }
+                else
+                {
+                    result = string.Empty;
+                }
+            }
+            catch
+            {
+                result = string.Empty;
+            }
+            return result;
+        }
         public static string RemoveHTMLTag(string htmlString)
         {
             if (string.IsNullOrEmpty(htmlString)) return string.Empty;

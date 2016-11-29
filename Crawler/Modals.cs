@@ -27,6 +27,7 @@ namespace Crawler
         public DateTime DateSynced { get; set; }
         public int CountSynced { get; set; }
         public int LinkType { get; set; }
+        public string LinkDownload { get; set; }
     }
 
     public class Contents : ModalsBase

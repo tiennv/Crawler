@@ -6,7 +6,18 @@ using System.Threading.Tasks;
 
 namespace Crawler
 {
-    class Repository
+    public class RepositoryLinks : BaseRepository<Links>
     {
+
+    }
+
+    public class RepositoryContents : BaseRepository<Contents>
+    {
+
+    }
+
+    public class RepositorySites : BaseRepository<Sites>
+    {
+
     }
 }
