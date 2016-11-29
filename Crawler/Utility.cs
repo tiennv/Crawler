@@ -29,7 +29,7 @@ namespace CrawlBonBanh
             Thread.Sleep(random);
             //Thread.Sleep(1000);
         }
-        
+            
         public static string CrawlHTML(string urlAddress)
         {
             try
