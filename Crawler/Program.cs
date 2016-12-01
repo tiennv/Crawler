@@ -14,14 +14,14 @@ namespace Crawler
         {
             try
             {
-                GetDetailiOS();
+                
                 //GetLinkDetailiOs();
-                //var objLinks = _repoLinks.GetAll(200);
-                //foreach (var item in objLinks)
-                //{
-                //    GetDetail(item);
-                //}
-                //Console.WriteLine("OK");
+                var objLinks = _repoLinks.GetByGameType(200, 1);
+                foreach (var item in objLinks)
+                {
+                    GetDetailiOS(item);
+                }
+                Console.WriteLine("OK");
             }
             catch(Exception ex)
             {
@@ -144,16 +144,38 @@ namespace Crawler
             Console.Read();
         }
 
-        static void GetDetailiOS()
+        static void GetDetailiOS(Links objLink)
         {
-            var url = "https://itunes.apple.com/vn/app/ao-vang-mua-thu/id548894214?mt=8";
+            var url = objLink.Link;
             var data = Utility.CrawlHTML(url, "itunes.apple.com");
             var divContent = Utility.ExtractValueUsingXPath(data, @"//div[@class='product-review']");
             var content = Utility.GetValueFromSpan(Utility.ExtractValueUsingXPath(divContent, "//div/p"),"p");
             var divImage = Utility.ExtractValueUsingXPath(data, @"//div[@class='swoosh lockup-container application large screenshots']");            
             var listImg = Utility.GetAllImageInHtml(divImage);
-            Console.WriteLine(divContent);
-            Console.Read();
+
+            var objDetail = new Contents
+            {
+                AvatarBig = objLink.Avatar,
+                Title = objLink.Title,
+                Content = content,
+                Link = objLink.Link,
+                ImageContent = listImg == null || listImg.Count == 0 ? "" : String.Join(",", listImg),                
+                DateSynced = DateTime.Now,
+                Avatar = objLink.Avatar,
+                Description = objLink.Description,
+                LinkDownload = url,
+                LinkId = objLink.Id
+            };
+
+            var inserted = _repoContents.Add(objDetail);
+            if (inserted > 0)
+            {
+                objLink.DateSynced = DateTime.Now;
+                _repoLinks.Update(objLink);
+            }
+
+            //Console.WriteLine(divContent);
+            //Console.Read();
         }
 
         static void GetDetail(Links objLink)

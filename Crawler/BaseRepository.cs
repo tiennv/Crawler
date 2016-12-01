@@ -115,5 +115,23 @@ namespace Crawler
                 return result;
             }
         }
+
+        /// <summary>
+        /// Get theo loai game
+        /// </summary>
+        /// <param name="top">top</param>
+        /// <param name="gameType">0: android, 1: ios</param>
+        /// <returns></returns>
+        public List<T> GetByGameType(int top, int gameType)
+        {
+            using (var sqlConnection = new SqlConnection(ConnectionString))
+            {
+                sqlConnection.Open();
+                var result = sqlConnection.Query<T>($"select Top({top}) * from {typeof(T).Name} where DateSynced is null and GameType = @gameType", new { gameType = gameType }).ToList();
+                sqlConnection.Close();
+                sqlConnection.Dispose();
+                return result;
+            }
+        }
     }
 }
