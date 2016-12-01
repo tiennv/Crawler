@@ -150,7 +150,8 @@ namespace Crawler
             var data = Utility.CrawlHTML(url, "itunes.apple.com");
             var divContent = Utility.ExtractValueUsingXPath(data, @"//div[@class='product-review']");
             var content = Utility.GetValueFromSpan(Utility.ExtractValueUsingXPath(divContent, "//div/p"),"p");
-
+            var divImage = Utility.ExtractValueUsingXPath(data, @"//div[@class='swoosh lockup-container application large screenshots']");            
+            var listImg = Utility.GetAllImageInHtml(divImage);
             Console.WriteLine(divContent);
             Console.Read();
         }

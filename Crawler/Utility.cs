@@ -10,6 +10,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Configuration;
 using HtmlAgilityPack;
+using System.Linq;
 
 namespace CrawlBonBanh
 {
@@ -330,7 +331,7 @@ namespace CrawlBonBanh
                 }
                 result = list;
             }
-            catch
+            catch(Exception ex)
             {
                 result = list;
             }
@@ -354,7 +355,7 @@ namespace CrawlBonBanh
                     result = string.Empty;
                 }
             }
-            catch
+            catch(Exception ex)
             {
                 result = string.Empty;
             }
@@ -375,7 +376,16 @@ namespace CrawlBonBanh
             }
             return result;
         }
+        public static List<string> GetAllImageInHtml(string html)
+        {
+            HtmlDocument htmlDocument = new HtmlDocument();
+            htmlDocument.LoadHtml(html);
+            var urls = htmlDocument.DocumentNode.Descendants("img")
+                                .Select(e => e.GetAttributeValue("src", null))
+                                .Where(s => !String.IsNullOrEmpty(s));
 
+            return urls.ToList();
+        }
         public static string GetValueFromSpan(string text, string attributeName)
         {
             string result;
