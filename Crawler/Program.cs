@@ -14,13 +14,14 @@ namespace Crawler
         {
             try
             {
-                
+
+                _repoLinks.QueryMutiple();
                 //GetLinkDetailiOs();
-                var objLinks = _repoLinks.GetByGameType(200, 1);
-                foreach (var item in objLinks)
-                {
-                    GetDetailiOS(item);
-                }
+                //var objLinks = _repoLinks.GetByGameType(200, 1);
+                //foreach (var item in objLinks)
+                //{
+                //    GetDetailiOS(item);
+                //}
                 Console.WriteLine("OK");
             }
             catch(Exception ex)
