@@ -48,5 +48,32 @@ namespace Crawler
         public int LinkId { get; set; }
     }
 
+	public class Apps : ModalsBase
+	{
+		public Apps()
+		{
+			IsLocal = false;
+			AppPartner = "Sunnet";
+			AppPublish = DateTime.Now;
+			AppCatID = 96;
+			AppActive = true;
+		}
+		public int AppIDOld { get; set; }
+		public string AppName { get; set; }
+		public string AppDes { get; set; }
+		public string AppContent { get; set; }
+		public string AppImage { get; set; }
+		public string AppIcon { get; set; }
+		public string AppLinkDownload { get; set; }
+		public string AppPartner { get; set; }
+		public string AppSize { get; set; }
+		public int AppDownloadCount { get; set; }
+		public bool IsLocal { get; set; }
+		public int AppCatID { get; set; }
+		public DateTime AppPublish { get; set; }
+		public bool AppActive { get; set; }
+		public string AppCategory { get; set; }
+	}
+
 
 }

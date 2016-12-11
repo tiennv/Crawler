@@ -14,15 +14,16 @@ namespace Crawler
         {
             try
             {
-
-                _repoLinks.QueryMutiple();
-                //GetLinkDetailiOs();
-                //var objLinks = _repoLinks.GetByGameType(200, 1);
-                //foreach (var item in objLinks)
-                //{
-                //    GetDetailiOS(item);
-                //}
-                Console.WriteLine("OK");
+				//GetLinkDetail();
+				//_repoLinks.QueryMutiple();
+				//GetLinkDetailiOs();
+				//var objLinks = _repoLinks.GetByGameType(500, 1);
+				//foreach (var item in objLinks)
+				//{
+				//	GetDetailiOS(item);
+				//}
+				ImportData(1);
+				Console.WriteLine("OK");
             }
             catch(Exception ex)
             {
@@ -60,8 +61,8 @@ namespace Crawler
 
         static readonly RepositoryLinks _repoLinks = new RepositoryLinks();
         static readonly RepositoryContents _repoContents = new RepositoryContents();
-
-        static void GetLinkDetail()
+		static readonly RepositoryApps _repoApps = new RepositoryApps();
+		static void GetLinkDetail()
         {
             int pageIndex = 20;
             string urlFormat = "http://s.qplay.vn/?page={0}";
@@ -226,6 +227,26 @@ namespace Crawler
             }
             
         }
+
+		static void ImportData(int gameType)
+		{
+			var lstContent = _repoContents.GetContents(gameType);
+			foreach (var item in lstContent)
+			{
+				var objApps = new Apps
+				{
+					AppContent = item.Content,
+					AppDes = string.IsNullOrEmpty(item.Description) ? item.Content : item.Description,
+					AppIcon = item.AvatarBig,
+					AppImage = item.AvatarBig,
+					AppLinkDownload = item.LinkDownload,
+					AppName = item.Title,
+				};
+
+				var inserted = _repoApps.Add(objApps);
+				Console.WriteLine(inserted + ": " + item.Title);
+			}
+		}
 
     }
 }

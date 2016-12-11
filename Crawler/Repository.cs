@@ -36,11 +36,29 @@ namespace Crawler
 
     public class RepositoryContents : BaseRepository<Contents>
     {
-
+		public List<Contents> GetContents(int gameType)
+		{
+			var sql = "select C.* from Contents C Inner Join Links L ON L.Id = C.LinkId Where L.GameType = @GameType";
+			using (var sqlConnection = new SqlConnection(ConnectionString))
+			{
+				sqlConnection.Open();
+				var obj = sqlConnection.Query<Contents>(sql, new { GameType = gameType }).ToList();
+				sqlConnection.Close();
+				return obj;
+			}
+		}
     }
 
     public class RepositorySites : BaseRepository<Sites>
     {
 
-    }    
+    }
+
+	public class RepositoryApps : BaseRepository<Apps>
+	{
+		//public new int Add(Apps apps)
+		//{
+		//	var sql = "";
+		//}
+	}
 }
